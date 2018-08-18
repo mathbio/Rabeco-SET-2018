@@ -41,7 +41,7 @@ Lmap <- function(a, X0, K=rep(1,steps), steps){
 ```
 
 
-# Empirical Dynamic Modelling
+# Empirical Dynamic Modelling (**EDM**)
 
 ## George Sugihara et al.
 
@@ -70,7 +70,7 @@ Lmap <- function(a, X0, K=rep(1,steps), steps){
 
 $$ X_{t+1} = a_0 X_t + a_1 X_{t-1} + ... + a_n X_{t-n} $$
 
-## Model não não-linear de série temporal
+## Model não-linear de série temporal
 
 $$ X_{t+1} = r X_t - r X_t^2 $$
 
