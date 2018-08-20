@@ -27,11 +27,11 @@ options(formatR.arrow = TRUE, scipen=999)
 
 ```{r functions and facilities}
 ## Logistic map with time-varying K
-Lmap <- function(a, X0, K=rep(1,steps), steps){
+Lmap <- function(a, X0 = 0.1, K=rep(1,steps), steps){
     ## A vector to store abundance data
     X <- c()
     ## Initial values
-    X[1] <- 0.1
+    X[1] <- X0
     ## Iterate the dynamics 150 time steps
     for(i in 2:steps){
         X[i] <- a*X[i-1] * (K[i-1] - X[i-1]) 
@@ -40,12 +40,28 @@ Lmap <- function(a, X0, K=rep(1,steps), steps){
 }
 ```
 
+# Um alternativa às abordagens lineares
+
+## Ruído X dinâmicas complexas
+
+```{r motivation, fig.width = 9}
+X1 <- Lmap(a = 3.9, X0 = 0.1, steps = 50)    
+par(mfrow=c(1,2))
+plot(X1, xlab = "Time", ylab = "X(t)",
+     type="l", lwd=2, col="blue",
+     main = "Deterministic", cex.main=2)
+plot(rnorm(50,1,1), xlab = "Time", ylab = "X(t)",
+     type = "l", lwd=2, col="red",
+     main = "White noise", cex.main=2)
+par(mfrow=c(1,1))
+```
 
 # Empirical Dynamic Modelling (**EDM**)
 
 ## George Sugihara et al.
 
 ![](Sugihara_George_720.jpg)
+
 
 ## Empirical = data driven
 
@@ -70,7 +86,7 @@ Lmap <- function(a, X0, K=rep(1,steps), steps){
 
 $$ X_{t+1} = a_0 X_t + a_1 X_{t-1} + ... + a_n X_{t-n} $$
 
-## Model não-linear de série temporal
+## Modelo não-linear de série temporal
 
 $$ X_{t+1} = r X_t - r X_t^2 $$
 
@@ -112,6 +128,16 @@ X <- Lmap(a1, K = Y, steps = timesteps)
 plot(X[-timesteps], xlab="Time", ylab="X", type="l", lwd=2, ylim=range(c(Y,X)))
 lines(Y[-timesteps], type="l", lwd=2, col="blue")
 ```
+
+## Previsão de curto prazo
+
+```{r previsao curto prazo}
+plot(X[-timesteps], xlab="Time", ylab="X", type="l", lwd=2, xlim = c(0,timesteps+10))
+points(timesteps-1, X[timesteps-1], pch=19, col="blue", cex=1.5)
+arrows(x0=timesteps-1, y0=X[timesteps-1], x1=timesteps+2, y1=X[timesteps-1]+0.1, col="blue", lwd=2, length=0.1)
+arrows(x0=timesteps-1, y0=X[timesteps-1], x1=timesteps+2, y1=X[timesteps-1]-0.1, col="blue", lwd=2, length=0.1)
+```
+
 
 ## Eventos similares na série temporal
 
@@ -199,12 +225,4 @@ for(i in c(length(X)-3,neigb1)){
     z <- z+1}
 ```
 
-# Para saber mais
-
-##
-
-* Sugihara lab: http://deepeco.ucsd.edu/
-* Pacote rEDM: https://cran.r-project.org/package=rEDM
-* Tutoriais Grupo MathBio: https://mathbio.github.io/edmTutorials/
-* Este simpósio: https://github.com/mathbio/Rabeco-SET-2018
-
+# Obrigado
